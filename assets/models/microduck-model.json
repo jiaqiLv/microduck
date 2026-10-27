@@ -1,0 +1,829 @@
+{
+  "source": "src/microduck_rl/src/mjlab_microduck/robot/microduck/robot_walk.xml",
+  "nbody": 16,
+  "ngeom_visual": 70,
+  "nmesh": 38,
+  "bounds": {
+    "min": [
+      -0.05178,
+      -0.0705,
+      0.01347
+    ],
+    "max": [
+      0.09229,
+      0.0705,
+      0.27745
+    ]
+  },
+  "bodies": [
+    {
+      "node": "body_world",
+      "name": "world",
+      "parent": null
+    },
+    {
+      "node": "body_trunk_base",
+      "name": "trunk_base",
+      "parent": null
+    },
+    {
+      "node": "body_yaw2roll",
+      "name": "yaw2roll",
+      "parent": "trunk_base"
+    },
+    {
+      "node": "body_hip_l",
+      "name": "hip_l",
+      "parent": "yaw2roll"
+    },
+    {
+      "node": "body_upper_leg_left",
+      "name": "upper_leg_left",
+      "parent": "hip_l"
+    },
+    {
+      "node": "body_leg",
+      "name": "leg",
+      "parent": "upper_leg_left"
+    },
+    {
+      "node": "body_ankle_left",
+      "name": "ankle_left",
+      "parent": "leg"
+    },
+    {
+      "node": "body_neck",
+      "name": "neck",
+      "parent": "trunk_base"
+    },
+    {
+      "node": "body_neck_pitch",
+      "name": "neck_pitch",
+      "parent": "neck"
+    },
+    {
+      "node": "body_yaw_roll_motion",
+      "name": "yaw_roll_motion",
+      "parent": "neck_pitch"
+    },
+    {
+      "node": "body_jaw_soft",
+      "name": "jaw_soft",
+      "parent": "yaw_roll_motion"
+    },
+    {
+      "node": "body_bearing_roll",
+      "name": "bearing_roll",
+      "parent": "trunk_base"
+    },
+    {
+      "node": "body_hip_l_2",
+      "name": "hip_l_2",
+      "parent": "bearing_roll"
+    },
+    {
+      "node": "body_upper_leg_right",
+      "name": "upper_leg_right",
+      "parent": "hip_l_2"
+    },
+    {
+      "node": "body_leg_2",
+      "name": "leg_2",
+      "parent": "upper_leg_right"
+    },
+    {
+      "node": "body_ankle_right",
+      "name": "ankle_right",
+      "parent": "leg_2"
+    }
+  ],
+  "joints": [
+    {
+      "name": "trunk_base_freejoint",
+      "body": "trunk_base",
+      "node": "body_trunk_base",
+      "type": 0,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        0.0,
+        0.0
+      ],
+      "actuated": false
+    },
+    {
+      "name": "left_hip_yaw",
+      "body": "yaw2roll",
+      "node": "body_yaw2roll",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.4363,
+        0.5236
+      ],
+      "actuated": true
+    },
+    {
+      "name": "left_hip_roll",
+      "body": "hip_l",
+      "node": "body_hip_l",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.384,
+        0.384
+      ],
+      "actuated": true
+    },
+    {
+      "name": "left_hip_pitch",
+      "body": "upper_leg_left",
+      "node": "body_upper_leg_left",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "left_knee",
+      "body": "leg",
+      "node": "body_leg",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "left_ankle",
+      "body": "ankle_left",
+      "node": "body_ankle_left",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "neck_pitch",
+      "body": "neck",
+      "node": "body_neck",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.0472
+      ],
+      "actuated": true
+    },
+    {
+      "name": "head_pitch",
+      "body": "neck_pitch",
+      "node": "body_neck_pitch",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "head_yaw",
+      "body": "yaw_roll_motion",
+      "node": "body_yaw_roll_motion",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -2.9671,
+        2.9671
+      ],
+      "actuated": true
+    },
+    {
+      "name": "head_roll",
+      "body": "jaw_soft",
+      "node": "body_jaw_soft",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.4363,
+        0.4363
+      ],
+      "actuated": true
+    },
+    {
+      "name": "right_hip_yaw",
+      "body": "bearing_roll",
+      "node": "body_bearing_roll",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.5236,
+        0.4363
+      ],
+      "actuated": true
+    },
+    {
+      "name": "right_hip_roll",
+      "body": "hip_l_2",
+      "node": "body_hip_l_2",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.384,
+        0.384
+      ],
+      "actuated": true
+    },
+    {
+      "name": "right_hip_pitch",
+      "body": "upper_leg_right",
+      "node": "body_upper_leg_right",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "right_knee",
+      "body": "leg_2",
+      "node": "body_leg_2",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    },
+    {
+      "name": "right_ankle",
+      "body": "ankle_right",
+      "node": "body_ankle_right",
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.5708,
+        1.5708
+      ],
+      "actuated": true
+    }
+  ],
+  "sites": [
+    {
+      "name": "imu",
+      "body": "trunk_base",
+      "world": [
+        -0.021,
+        7e-05,
+        0.1053
+      ]
+    },
+    {
+      "name": "left_foot",
+      "body": "ankle_left",
+      "world": [
+        -0.03178,
+        0.05041,
+        0.01469
+      ]
+    },
+    {
+      "name": "head_camera",
+      "body": "jaw_soft",
+      "world": [
+        0.0814,
+        -9e-05,
+        0.25111
+      ]
+    },
+    {
+      "name": "tof",
+      "body": "jaw_soft",
+      "world": [
+        0.0814,
+        0.02241,
+        0.24911
+      ]
+    },
+    {
+      "name": "head_imu",
+      "body": "jaw_soft",
+      "world": [
+        0.05916,
+        0.00011,
+        0.25085
+      ]
+    },
+    {
+      "name": "mouth_tip",
+      "body": "jaw_soft",
+      "world": [
+        0.08584,
+        0.0,
+        0.22752
+      ]
+    },
+    {
+      "name": "right_foot",
+      "body": "ankle_right",
+      "world": [
+        -0.03178,
+        -0.05041,
+        0.01469
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "node": "geom_00",
+      "body": "trunk_base",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_01",
+      "body": "trunk_base",
+      "mesh": "right_shell",
+      "material": "right_shell_material"
+    },
+    {
+      "node": "geom_02",
+      "body": "trunk_base",
+      "mesh": "banana_pcb_locker",
+      "material": "banana_pcb_locker_material"
+    },
+    {
+      "node": "geom_03",
+      "body": "trunk_base",
+      "mesh": "trunk_base",
+      "material": "trunk_base_material"
+    },
+    {
+      "node": "geom_04",
+      "body": "trunk_base",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_05",
+      "body": "trunk_base",
+      "mesh": "power_support",
+      "material": "power_support_material"
+    },
+    {
+      "node": "geom_07",
+      "body": "trunk_base",
+      "mesh": "np_f970",
+      "material": "np_f970_material"
+    },
+    {
+      "node": "geom_08",
+      "body": "trunk_base",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_09",
+      "body": "trunk_base",
+      "mesh": "left_shell",
+      "material": "left_shell_material"
+    },
+    {
+      "node": "geom_10",
+      "body": "trunk_base",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_11",
+      "body": "yaw2roll",
+      "mesh": "yaw2roll",
+      "material": "yaw2roll_material"
+    },
+    {
+      "node": "geom_12",
+      "body": "yaw2roll",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_13",
+      "body": "yaw2roll",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_14",
+      "body": "yaw2roll",
+      "mesh": "bearing_roll",
+      "material": "bearing_roll_material"
+    },
+    {
+      "node": "geom_15",
+      "body": "hip_l",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_16",
+      "body": "hip_l",
+      "mesh": "hip_l",
+      "material": "hip_l_material"
+    },
+    {
+      "node": "geom_17",
+      "body": "upper_leg_left",
+      "mesh": "upper_leg_left",
+      "material": "upper_leg_left_material"
+    },
+    {
+      "node": "geom_18",
+      "body": "upper_leg_left",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_19",
+      "body": "upper_leg_left",
+      "mesh": "upper_leg_rigidity_plate",
+      "material": "upper_leg_rigidity_plate_material"
+    },
+    {
+      "node": "geom_20",
+      "body": "upper_leg_left",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_21",
+      "body": "upper_leg_left",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_22",
+      "body": "leg",
+      "mesh": "leg",
+      "material": "leg_material"
+    },
+    {
+      "node": "geom_24",
+      "body": "leg",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_25",
+      "body": "ankle_left",
+      "mesh": "sole_left",
+      "material": "sole_left_material"
+    },
+    {
+      "node": "geom_27",
+      "body": "ankle_left",
+      "mesh": "foot_left",
+      "material": "foot_left_material"
+    },
+    {
+      "node": "geom_28",
+      "body": "ankle_left",
+      "mesh": "seeed_bearing__configuration_default",
+      "material": "seeed_bearing__configuration_default_material"
+    },
+    {
+      "node": "geom_29",
+      "body": "ankle_left",
+      "mesh": "ankle_left",
+      "material": "ankle_left_material"
+    },
+    {
+      "node": "geom_30",
+      "body": "neck",
+      "mesh": "neck",
+      "material": "neck_material"
+    },
+    {
+      "node": "geom_31",
+      "body": "neck",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_32",
+      "body": "neck",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_33",
+      "body": "neck",
+      "mesh": "neck",
+      "material": "neck_material"
+    },
+    {
+      "node": "geom_34",
+      "body": "neck_pitch",
+      "mesh": "neck_pitch",
+      "material": "neck_pitch_material"
+    },
+    {
+      "node": "geom_35",
+      "body": "neck_pitch",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_36",
+      "body": "yaw_roll_motion",
+      "mesh": "yaw_roll_motion",
+      "material": "yaw_roll_motion_material"
+    },
+    {
+      "node": "geom_37",
+      "body": "yaw_roll_motion",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_38",
+      "body": "yaw_roll_motion",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_39",
+      "body": "yaw_roll_motion",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_40",
+      "body": "jaw_soft",
+      "mesh": "lens",
+      "material": "lens_material"
+    },
+    {
+      "node": "geom_41",
+      "body": "jaw_soft",
+      "mesh": "face_part",
+      "material": "face_part_material"
+    },
+    {
+      "node": "geom_42",
+      "body": "jaw_soft",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_43",
+      "body": "jaw_soft",
+      "mesh": "jaw_soft",
+      "material": "jaw_soft_material"
+    },
+    {
+      "node": "geom_44",
+      "body": "jaw_soft",
+      "mesh": "motor_support",
+      "material": "motor_support_material"
+    },
+    {
+      "node": "geom_45",
+      "body": "jaw_soft",
+      "mesh": "top_head_shell",
+      "material": "top_head_shell_material"
+    },
+    {
+      "node": "geom_46",
+      "body": "jaw_soft",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_47",
+      "body": "jaw_soft",
+      "mesh": "seeed_bearing__configuration_default",
+      "material": "seeed_bearing__configuration_default_material"
+    },
+    {
+      "node": "geom_48",
+      "body": "jaw_soft",
+      "mesh": "elec_rpi_robot_hat_pcb",
+      "material": "elec_rpi_robot_hat_pcb_material"
+    },
+    {
+      "node": "geom_49",
+      "body": "jaw_soft",
+      "mesh": "soft_mouth_top",
+      "material": "soft_mouth_top_material"
+    },
+    {
+      "node": "geom_50",
+      "body": "jaw_soft",
+      "mesh": "noenoeil",
+      "material": "noenoeil_material"
+    },
+    {
+      "node": "geom_51",
+      "body": "jaw_soft",
+      "mesh": "jaw",
+      "material": "jaw_material"
+    },
+    {
+      "node": "geom_52",
+      "body": "jaw_soft",
+      "mesh": "bottom_head_shell",
+      "material": "bottom_head_shell_material"
+    },
+    {
+      "node": "geom_53",
+      "body": "jaw_soft",
+      "mesh": "m12_lens_holder",
+      "material": "m12_lens_holder_material"
+    },
+    {
+      "node": "geom_54",
+      "body": "jaw_soft",
+      "mesh": "pcb__raspberry_pi_zero_2_w",
+      "material": "pcb__raspberry_pi_zero_2_w_material"
+    },
+    {
+      "node": "geom_55",
+      "body": "jaw_soft",
+      "mesh": "speaker",
+      "material": "speaker_material"
+    },
+    {
+      "node": "geom_56",
+      "body": "bearing_roll",
+      "mesh": "yaw2roll",
+      "material": "yaw2roll_material"
+    },
+    {
+      "node": "geom_57",
+      "body": "bearing_roll",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_58",
+      "body": "bearing_roll",
+      "mesh": "bearing_roll",
+      "material": "bearing_roll_material"
+    },
+    {
+      "node": "geom_59",
+      "body": "bearing_roll",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_60",
+      "body": "hip_l_2",
+      "mesh": "hip_l",
+      "material": "hip_l_material"
+    },
+    {
+      "node": "geom_61",
+      "body": "hip_l_2",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_62",
+      "body": "upper_leg_right",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_63",
+      "body": "upper_leg_right",
+      "mesh": "seeed_bearing__configuration__22x16x4",
+      "material": "seeed_bearing__configuration__22x16x4_material"
+    },
+    {
+      "node": "geom_64",
+      "body": "upper_leg_right",
+      "mesh": "upper_leg_rigidity_plate",
+      "material": "upper_leg_rigidity_plate_material"
+    },
+    {
+      "node": "geom_65",
+      "body": "upper_leg_right",
+      "mesh": "upper_leg_right",
+      "material": "upper_leg_right_material"
+    },
+    {
+      "node": "geom_66",
+      "body": "upper_leg_right",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_67",
+      "body": "leg_2",
+      "mesh": "xl330",
+      "material": "xl330_material"
+    },
+    {
+      "node": "geom_68",
+      "body": "leg_2",
+      "mesh": "leg",
+      "material": "leg_material"
+    },
+    {
+      "node": "geom_70",
+      "body": "ankle_right",
+      "mesh": "ankle_right",
+      "material": "ankle_right_material"
+    },
+    {
+      "node": "geom_71",
+      "body": "ankle_right",
+      "mesh": "sole_right",
+      "material": "sole_right_material"
+    },
+    {
+      "node": "geom_73",
+      "body": "ankle_right",
+      "mesh": "seeed_bearing__configuration_default",
+      "material": "seeed_bearing__configuration_default_material"
+    },
+    {
+      "node": "geom_74",
+      "body": "ankle_right",
+      "mesh": "foot_right",
+      "material": "foot_right_material"
+    }
+  ]
+}

@@ -1,26 +1,270 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的个人网站</title>
-  <style>
-    body {
-      max-width: 800px;
-      margin: 100px auto;
-      padding: 24px;
-      font-family: Arial, sans-serif;
-      line-height: 1.8;
-      color: #222;
-    }
-    a { color: #0969da; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microduck 复现站 · 3D 拆解与策略展示</title>
+  <meta name="description" content="Microduck 的复现记录：一只 25 厘米的双足机器人，15 个舵机、14 维策略动作、50 Hz 控制环。首页可交互式拆解整机，点击每个部件看它做什么。" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307080b'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ff8a3d'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./assets/css/site.css" />
+  <script>
+    // 静态站点没有后端日志，脚本一旦抛错页面只会“什么都不动”。
+    // 把错误收集起来：控制台能看，自动化测试也能读。
+    window.__errors = [];
+    addEventListener('error', (e) => {
+      window.__errors.push(String((e && (e.message || e.error)) || 'unknown error'));
+    });
+    addEventListener('unhandledrejection', (e) => {
+      window.__errors.push('rejection: ' + String((e && e.reason) || 'unknown'));
+    });
+  </script>
 </head>
 <body>
-  <h1>你好，世界！</h1>
-  <p>欢迎来到我的 GitHub Pages 网站。</p>
-  <p>这里将展示我的项目、研究成果和个人介绍。</p>
-  <a href="https://github.com/">访问 GitHub</a>
+  <header class="site-head">
+    <a class="brand" href="#top">
+      <span class="dot" aria-hidden="true"></span>
+      microduck
+      <small>复现站 · Replication Notes</small>
+    </a>
+    <nav class="site-nav" aria-label="主导航">
+      <a href="#parts">部件</a>
+      <a href="#reproduce">复现路线</a>
+      <a href="#policies">策略</a>
+      <a href="#resources">资源</a>
+      <a class="is-gh" href="https://github.com/jiaqiLv/microduck" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- ------------------------------------------------------------ hero -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Pollen Robotics · Microduck</p>
+        <h1>一只 25 厘米的双足机器人，<br />和把它跑起来的<em>强化学习策略</em></h1>
+        <p class="lede">
+          15 个舵机、14 维关节动作、50 Hz 控制环。这里记录它的复现过程：
+          仿真怎么搭、策略怎么训、真机上每个部件各自负责什么。
+          右边是完整的 CAD 模型，点任何一个部件都能看它在整机里的角色。
+        </p>
+
+        <dl class="stats">
+          <div>
+            <dt>Servos</dt>
+            <dd>15 <span>× XL330</span></dd>
+          </div>
+          <div>
+            <dt>Action dim</dt>
+            <dd>14 <span>关节</span></dd>
+          </div>
+          <div>
+            <dt>Control loop</dt>
+            <dd>50 <span>Hz</span></dd>
+          </div>
+          <div>
+            <dt>Height / mass</dt>
+            <dd>25 <span>cm · 800 g</span></dd>
+          </div>
+        </dl>
+
+        <div class="hero-actions">
+          <button class="btn btn--accent" type="button" data-scroll-to="#parts">
+            拆解这台机器
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </button>
+          <a class="btn" href="#reproduce">复现路线</a>
+        </div>
+      </div>
+
+      <div class="stage-col">
+        <div class="stage-wrap" id="stage">
+          <canvas id="duck-canvas" aria-label="Microduck 三维模型，可旋转缩放，点击部件查看说明"></canvas>
+
+          <div class="stage-hud" aria-hidden="true">
+            <span class="hud-pill">CAD · MuJoCo 模型</span>
+            <span class="hud-pill" id="hud-part">点击部件</span>
+          </div>
+
+          <div class="stage-tools">
+            <button class="tool" type="button" id="btn-reset" title="复位视角" aria-label="复位视角">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 1 2.6 5.9"/><path d="M4 5v5h5"/></svg>
+            </button>
+            <button class="tool" type="button" id="btn-spin" title="自动旋转" aria-label="自动旋转" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/><circle cx="12" cy="12" r="4.2"/></svg>
+            </button>
+            <button class="tool" type="button" id="btn-idle" title="待机微动" aria-label="待机微动" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c3.5-6 6.5 6 10 0s4.5-6 8 0"/></svg>
+            </button>
+          </div>
+
+          <div class="stage-state" id="stage-state">
+            <div class="spinner" aria-hidden="true"></div>
+            <p id="stage-state-text">正在载入 CAD 模型（7.8 MB）…</p>
+          </div>
+        </div>
+
+        <div class="part-panel">
+          <aside class="part-card" id="part-card" hidden aria-live="polite">
+            <button class="part-card__close" type="button" id="btn-clear" aria-label="关闭部件说明">×</button>
+            <div class="part-card__head">
+              <h2 class="part-card__label" id="card-label">—</h2>
+              <span class="part-card__role" id="card-role">—</span>
+            </div>
+            <div class="part-card__tags" id="card-tags"></div>
+            <ul id="card-list"></ul>
+          </aside>
+
+          <div class="part-hint" id="part-hint">
+            <span class="part-hint__k">3D 拆解</span>
+            <p>拖动旋转 · 滚轮缩放 · 点击模型上的任意部件，这里会显示它负责什么。</p>
+            <ul class="part-hint__tips">
+              <li><i aria-hidden="true"></i>橙色 = 当前选中的部件</li>
+              <li><i aria-hidden="true"></i>圆点 = IMU / ToF / 相机</li>
+              <li><i aria-hidden="true"></i>Esc = 取消选择</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="chips" id="chips" aria-label="部件快速选择"></div>
+
+    <!-- ----------------------------------------------------------- parts -->
+    <section class="section" id="parts">
+      <div class="section-head">
+        <h2>部件清单</h2>
+        <p>
+          11 个可点选的部件组，来自仓库里的 MJCF 模型（<code>robot_walk.xml</code>）——
+          和训练策略时用的是同一份几何与关节定义，不是另画的示意图。
+        </p>
+      </div>
+      <div class="part-grid" id="part-grid"></div>
+    </section>
+
+    <!-- ------------------------------------------------------- reproduce -->
+    <section class="section" id="reproduce">
+      <div class="section-head">
+        <h2>复现路线</h2>
+        <p>从一台空机器到能自己走的四步。每一步都有明确的产物，能验收再往下走。</p>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <div class="step__n">STEP 01</div>
+          <h3>环境：Docker 跑仿真</h3>
+          <p>
+            daemon 用真的，身体换成 MuJoCo。一条命令起一只鸭子，控制环必须跑到实时，
+            否则策略等于在慢动作里训练。
+          </p>
+          <code>scripts/duck-sim</code>
+        </article>
+        <article class="step">
+          <div class="step__n">STEP 02</div>
+          <h3>训练：从任务到 checkpoint</h3>
+          <p>
+            mjlab + MuJoCo Warp，PPO，数千环境并行。奖励、观测、域随机化都在任务配置里，
+            改这三样才叫改任务。
+          </p>
+          <code>uv run train Mjlab-VelStand-Rough-Backlash-MicroDuck</code>
+        </article>
+        <article class="step">
+          <div class="step__n">STEP 03</div>
+          <h3>导出：checkpoint → ONNX</h3>
+          <p>
+            归一化器必须烘进计算图，手转会漏。导出后用真实观测对一遍数值，
+            这一步错了真机上表现为“抖动但能站”。
+          </p>
+          <code>uv run scripts/export.py &lt;task&gt; --checkpoint ...</code>
+        </article>
+        <article class="step">
+          <div class="step__n">STEP 04</div>
+          <h3>部署：装到真机</h3>
+          <p>
+            策略进槽位，先回 home 再热切换。装错了也能回滚：
+            更新引擎是验签 + 切目录 + 健康门禁，失败自动退回上一版。
+          </p>
+          <code>robotctl policy load walk &lt;repo&gt;</code>
+        </article>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------- policies -->
+    <section class="section" id="policies">
+      <div class="section-head">
+        <h2>策略展示</h2>
+        <p>官方策略集与本机训练结果。视频与曲线正在整理，先把位置和口径定下来。</p>
+      </div>
+
+      <div class="policy-grid">
+        <article class="policy">
+          <div class="policy__k">Official · v8</div>
+          <h3>VelStand</h3>
+          <p>主步态：站立、行走、转向、被推倒后自己爬起来，是同一个策略。</p>
+        </article>
+        <article class="policy">
+          <div class="policy__k">Official set</div>
+          <h3>Sit ↔ Stand</h3>
+          <p>姿态槽位，坐下之后仍然接受头部指令。</p>
+        </article>
+        <article class="policy">
+          <div class="policy__k">Official set</div>
+          <h3>Ground Pick</h3>
+          <p>低头捡物：喙触地、闭合、起身。轮滑模式下换成蹲下。</p>
+        </article>
+        <article class="policy">
+          <div class="policy__k">Local run</div>
+          <h3>Doc Curves</h3>
+          <p>1024 环境 × 200 迭代的短程训练，用来对照“正常曲线长什么样”。</p>
+        </article>
+      </div>
+
+      <p class="note">
+        <b>这一版先做结构。</b>动作视频、训练曲线、真实失败案例会陆续填进来；
+        口径是“能复现的才写”，跑不出来的不放在这里。
+      </p>
+    </section>
+
+    <!-- ------------------------------------------------------- resources -->
+    <section class="section" id="resources">
+      <div class="section-head">
+        <h2>资源</h2>
+        <p>代码、文档、学习材料。文档是中文的，按“零基础 → 真机”的顺序写。</p>
+      </div>
+
+      <div class="links">
+        <a class="link-card" href="https://github.com/jiaqiLv/microduck" target="_blank" rel="noreferrer">
+          <span>Repository</span>
+          <b>jiaqiLv/microduck</b>
+          <em>本站源码与部署配置</em>
+        </a>
+        <a class="link-card" href="https://github.com/pollen-robotics/microduck" target="_blank" rel="noreferrer">
+          <span>Upstream</span>
+          <b>pollen-robotics/microduck</b>
+          <em>运行时：daemon、控制环、更新引擎</em>
+        </a>
+        <a class="link-card" href="https://github.com/pollen-robotics/microduck_rl" target="_blank" rel="noreferrer">
+          <span>Training</span>
+          <b>pollen-robotics/microduck_rl</b>
+          <em>训练：mjlab、PPO、sim2real</em>
+        </a>
+        <a class="link-card" href="https://my.feishu.cn/wiki/XIrmwIlsGiDbXIk4LulcfFtVnuU" target="_blank" rel="noreferrer">
+          <span>Handbook</span>
+          <b>Microduck 学习手册</b>
+          <em>15 章中文文档，从零到真机</em>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>基于 Pollen Robotics 开源的 Microduck 硬件与策略，本站是复现记录。</span>
+    <span class="mono">CAD → glTF · three.js · 无后端</span>
+  </footer>
+
+  <noscript>
+    <p style="padding: 24px">这个页面的 3D 拆解需要 JavaScript。部件说明文字在下方“部件清单”里仍然可读。</p>
+  </noscript>
+
+  <script type="module" src="./assets/js/main.js"></script>
 </body>
 </html>
