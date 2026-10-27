@@ -1,13 +1,30 @@
 /**
  * 部件数据与匹配规则。
  *
- * 这里是全站唯一的一份“部件说明”数据：3D 高亮、右侧信息卡、下方芯片、
- * 以及页面下半部分的卡片列表都从 PARTS 生成，改文案只改这一个文件。
+ * 这里是全站唯一的一份“部件说明”数据：3D 高亮、说明卡、部件列表都从
+ * PARTS 生成，改文案只改这一个文件。
+ *
+ * 每条有三层文案，按篇幅递增：
+ *   role  —— 三个字到六个字，列表里的一行标签
+ *   line  —— 一句话，说明卡里唯一的一段正文
+ *   specs —— 两三个短标签，说明卡底部的等宽小字
+ *   bullets —— 长文，留给以后的笔记页；首页不渲染，但事实都在这儿。
  *
  * 匹配顺序有意义：先匹配“舵机”“脚”这类跨部位的零件，再落到具体身体。
  */
 
-/** @typedef {{id:string,label:string,role:string,tags:string[],bullets:{t:string,d:string}[],hotspot?:string}} Part */
+/**
+ * @typedef {object} Part
+ * @property {string} id
+ * @property {string} label
+ * @property {string} role
+ * @property {string} line
+ * @property {string[]} specs
+ * @property {string[]} tags
+ * @property {{t:string,d:string}[]} bullets
+ * @property {string} [hotspot]
+ * @property {string} [highlightWith]
+ */
 
 export const PARTS = [
   {
@@ -15,6 +32,8 @@ export const PARTS = [
     label: '头部',
     role: '感知与表达',
     tags: ['4 自由度', '相机', 'ToF', '扬声器'],
+    line: '四个自由度，转头、低头、歪头都由策略直接输出。',
+    specs: ['4 自由度', '相机', 'ToF', '扬声器'],
     hotspot: 'head_camera',
     bullets: [
       {
@@ -40,6 +59,8 @@ export const PARTS = [
     label: '喙',
     role: '唯一的夹取执行器',
     tags: ['1 个舵机', '软胶'],
+    line: '第 15 个舵机，独立于 14 维动作——夹取不干扰平衡。',
+    specs: ['1 舵机', '软胶', 'mouth_tip'],
     bullets: [
       {
         t: '单独的第 15 个舵机',
@@ -60,6 +81,8 @@ export const PARTS = [
     label: '颈部',
     role: '头部姿态的传动',
     tags: ['3 个舵机', '串联'],
+    line: '三个 XL330 串联，把 4 维头部指令变成实际姿态。',
+    specs: ['3 舵机', '串联'],
     bullets: [
       {
         t: '三段串联',
@@ -80,6 +103,8 @@ export const PARTS = [
     label: '躯干',
     role: '电池、计算与髋部',
     tags: ['NP-F970 电池', 'RK3566', 'IMU'],
+    line: 'NP-F970 电池、RK3566 与 IMU 都装在这块壳里。',
+    specs: ['NP-F970', 'RK3566', 'IMU'],
     hotspot: 'imu',
     bullets: [
       {
@@ -105,6 +130,8 @@ export const PARTS = [
     label: '左腿',
     role: '5 自由度',
     tags: ['髋 yaw / roll / pitch', '膝', '踝'],
+    line: '髋偏航、横滚、俯仰、膝、踝——走路全靠这五个。',
+    specs: ['5 自由度', '连杆传力'],
     bullets: [
       {
         t: '5 个 XL330',
@@ -125,6 +152,8 @@ export const PARTS = [
     label: '右腿',
     role: '5 自由度',
     tags: ['髋 yaw / roll / pitch', '膝', '踝'],
+    line: '镜像的五个关节，限位左右略有差别，按真机建模。',
+    specs: ['5 自由度', '跌倒恢复主力'],
     bullets: [
       {
         t: '镜像但不完全对称',
@@ -145,6 +174,8 @@ export const PARTS = [
     label: 'XL330 舵机',
     role: '15 个执行器',
     tags: ['Dynamixel', '1 Mbps', '固件 ≥ v46'],
+    line: '两条腿 10 个、头部 4 个、喙 1 个，全挂在一条总线上。',
+    specs: ['XL330-M288-T', '1 Mbps', '固件 ≥ v46'],
     bullets: [
       {
         t: '15 个，分工明确',
@@ -169,6 +200,8 @@ export const PARTS = [
     label: '脚掌与鞋底',
     role: '唯一的接地点',
     tags: ['橙色脚掌', '黄色鞋底'],
+    line: '橙色脚掌加黄色耐磨鞋底，磨平了只换鞋底。',
+    specs: ['foot_left/right', 'sole_left/right'],
     bullets: [
       {
         t: '两层结构',
@@ -189,6 +222,8 @@ export const PARTS = [
     label: 'IMU',
     role: '姿态与重力',
     tags: ['总线设备 id 200', '投影重力'],
+    line: '挂在舵机总线上（id 200），投影重力告诉策略哪边是下。',
+    specs: ['id 200', '投影重力'],
     hotspot: 'imu',
     highlightWith: 'torso',
     bullets: [
@@ -211,6 +246,8 @@ export const PARTS = [
     label: 'ToF 深度',
     role: '8×8 深度矩阵',
     tags: ['VL53L5CX', '15 Hz', '45° 视场'],
+    line: '45° 方视场切成 64 个区，最远 4 m，15 Hz 独立发布。',
+    specs: ['VL53L5CX', '15 Hz', '45°'],
     hotspot: 'tof',
     highlightWith: 'head',
     bullets: [
@@ -237,6 +274,8 @@ export const PARTS = [
     label: '相机',
     role: '视觉与远程入口',
     tags: ['m12 镜头', 'H.264'],
+    line: '前脸 m12 主摄，console 与 WebRTC 都从这一路取流。',
+    specs: ['m12 镜头', 'H.264'],
     hotspot: 'head_camera',
     highlightWith: 'head',
     bullets: [
